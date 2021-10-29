@@ -25,6 +25,14 @@ async function run(req, res) {
         console.log("connected db");
         const database = client.db("travelGuru");
       const servicesCollection = database.collection("services");
+
+      // Get Single Services
+      app.get('/services/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) }
+        const singleService = await servicesCollection.findOne(query)
+        res.json(singleService);
+      })
       
       // POST API 
       app.post('/services', async (req, res) => {
