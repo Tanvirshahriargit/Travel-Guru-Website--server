@@ -72,6 +72,13 @@ async function run(req, res) {
         const result = await allServices.toArray();
         res.send(result)
       })
+      // DETETE ORDERS
+      app.delete("/customers/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) }
+        const result = await customersCollection.deleteOne(query)
+        res.json(result)
+      })
     }
     finally {
         // await client.close();
