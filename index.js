@@ -25,6 +25,7 @@ async function run(req, res) {
         console.log("connected db");
         const database = client.db("travelGuru");
       const servicesCollection = database.collection("services");
+      const customersCollection = database.collection("customers");
 
       // Get Single Services
       app.get('/services/:id', async (req, res) => {
@@ -34,17 +35,38 @@ async function run(req, res) {
         res.json(singleService);
       })
       
-      // POST API 
+      // POST API Services
       app.post('/services', async (req, res) => {
         const services = req.body;
-        console.log("hitted cliend", services);
+        // console.log("hitted cliend", services);
         const result = await servicesCollection.insertOne(services);
-        console.log('Got new user', req.body);
         console.log("added services", result);
         res.send(result);
       });
 
-      // GET API 
+      // POST API CUSTOMERS
+      app.post('/customers', async (req, res) => {
+        const coustomer = req.body;
+        console.log("Hitting Order Parches", coustomer);
+        const result = await customersCollection.insertOne(coustomer)
+        res.send(result)
+      })
+
+      // GET ALL CUSTOMER
+      app.get('/customers', async (req, res) => {
+        const customers = customersCollection.find({})
+        const result = await customers.toArray();
+        res.send(result)
+        })
+
+      // GET MY Orders
+      app.get('/customers/:email', async (req, res) => {
+        const customerOder = customersCollection.find({ email: req.params.email })
+        const result = await customerOder.toArray();
+        res.send(result);
+      })
+
+      // GET API ALL SERVICES
       app.get('/services', async (req, res) => {
         const allServices = servicesCollection.find({})
         const result = await allServices.toArray();
